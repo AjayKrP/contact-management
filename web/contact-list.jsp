@@ -8,6 +8,8 @@
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
 
@@ -22,11 +24,9 @@
             <li><a href="<%=request.getContextPath()%>/list"
                    class="nav-link">Contacts</a></li>
         </ul>
-        <form class="navbar-form navbar-left" action="/action_page.php">
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search">
-            </div>
-            <button type="submit" class="btn btn-default">Submit</button>
+        <form class="form-inline my-2 my-lg-0 navbar-right" action="<%=request.getContextPath()%>/search" method="GET">
+            <input class="form-control mr-sm-2" name="name" type="search" placeholder="Search by name" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="color: antiquewhite;">Search</button>
         </form>
     </nav>
 </header>
@@ -39,27 +39,36 @@
         <h3 class="text-center">List of Contacts</h3>
         <hr>
         <div class="container">
-            <a href="<%=request.getContextPath()%>/new" class="btn btn-success text-left">Add
-                New Contact</a>
-            <form action="<%=request.getContextPath()%>/search" method="GET">
-                <div class="row">
-                    <div class="col-xs-6 col-md-4">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="name" placeholder="Search" id="txtSearch"/>
-                        </div>
-                    </div>
+            <div class="custom-control-inline">
+                <div class="add-new">
+                    <a href="<%=request.getContextPath()%>/new" class="btn btn-success text-left">Add
+                        New Contact</a>
                 </div>
-            </form>
+
+               <div class="custom-control-inline" style="margin-left: 50px">
+                    <div class="filter-by-attribute">
+                        <select class="form-control" id="filter_by">
+                            <option>select filter by</option>
+                            <option>id</option>
+                            <option>name</option>
+                            <option>email</option>
+                            <option>address</option>
+                            <option>mobile</option>
+                        </select>
+                    </div>
+                    <div class="sort_order">
+                        <select class="form-control" id="sort_order">\
+                            <option>select sort order</option>
+                            <option>asc</option>
+                            <option>desc</option>
+                        </select>
+                    </div>
+                    <button type="button" id="filter" class="btn btn-success">Filter</button>
+                </div>
+            </div>
         </div>
-        <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example
-                <span class="caret"></span></button>
-            <ul class="dropdown-menu">
-                <li><a href="#">HTML</a></li>
-                <li><a href="#">CSS</a></li>
-                <li><a href="#">JavaScript</a></li>
-            </ul>
-        </div>
+
+
         <br>
         <table class="table table-bordered">
             <thead>
@@ -93,5 +102,27 @@
         </table>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        /**
+         * If i use AJAX here then no need to use localStorage
+         * Using local storage ony for the purpose of remembering uses previous choice
+         */
+        if (localStorage.getItem('filterBy')) {
+            $('#filter_by').val(localStorage.getItem('filterBy'));
+        }
+        if (localStorage.getItem('orderBy')) {
+            $('#sort_order').val(localStorage.getItem('orderBy'));
+        }
+        $('#filter').click(function () {
+            let filterBy = $('#filter_by').val();
+            let orderBy = $('#sort_order').val();
+            localStorage.setItem('filterBy', filterBy);
+            localStorage.setItem('orderBy', orderBy);
+            let query_string = "<%=request.getContextPath()%>/filter?filter_by=" + filterBy  + "&sort_order="+ orderBy;
+            window.location.href = query_string;
+        });
+    })
+</script>
 </body>
 </html>
