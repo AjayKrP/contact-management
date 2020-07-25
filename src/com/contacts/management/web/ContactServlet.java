@@ -82,6 +82,7 @@ public class ContactServlet extends HttpServlet {
 	private void showEditForm(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException {
 		int id = Integer.parseInt(request.getParameter("id"));
+		System.out.println("contact id: " + id);
 		Contact existingUser = contactDAO.selectContact(id);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("contact-form.jsp");
 		request.setAttribute("contact", existingUser);

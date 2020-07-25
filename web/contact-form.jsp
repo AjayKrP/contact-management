@@ -31,12 +31,11 @@
     <div class="card">
         <div class="card-body">
             <c:if test="${contact != null}">
-            <form action="update" method="post">
+            <form id="contact-form-update" action="update" method="post">
                 </c:if>
                 <c:if test="${contact == null}">
-                <form id="contact-form" action="insert" method="post">
+                <form id="contact-form-insert" action="insert" method="post">
                     </c:if>
-
                     <caption>
                         <h2>
                             <c:if test="${contact != null}">
@@ -76,7 +75,7 @@
                                                       name="mobile">
                     </fieldset>
 
-                    <button type="button" id="save-form-button" class="btn btn-success">Save</button>
+                    <button type="submit" id="save-form-button" class="btn btn-success">Save</button>
                 </form>
         </div>
     </div>
@@ -123,8 +122,15 @@
             console.log(emailFieldValue, mobileFieldValue);
 
             if (validateMobile(mobileFieldValue) && validateEmail(emailFieldValue)) {
-                $('#contact-form').submit();
+                console.log('form submitted!');
+                if (window.location.href.indexOf('edit') >= 0) {
+                    $('#contact-form-update').submit();
+                }
+                else {
+                    $('#contact-form-insert').submit();
+                }
             } else {
+                console.log('error');
                 return false;
             }
         })
